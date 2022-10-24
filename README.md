@@ -1,3 +1,7 @@
 # movies-explorer-api
-movies-explorer-api
-test commit
+
+Connect to VM 
+
+IP
+
+Backend  
