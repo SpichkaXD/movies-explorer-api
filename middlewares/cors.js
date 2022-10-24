@@ -1,4 +1,11 @@
-const allowedCors = ['http://localhost:3000', 'https://localhost:3000'];
+const allowedCors = [
+  'https://spichka-diplom.nomoredomains.icu',
+  'http://spichka-diplom.nomoredomains.icu',
+  'https://api.spichka-diplom.nomoredomains.icu',
+  'http://api.spichka-diplom.nomoredomains.icu',
+  'http://localhost:3000',
+  'https://localhost:3000',
+];
 
 module.exports = (req, res, next) => {
   const { origin } = req.headers;
