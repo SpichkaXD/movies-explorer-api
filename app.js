@@ -33,12 +33,12 @@ app.get('/crash-test', () => {
 });
 
 async function main() {
-  await mongoose.connect(NODE_ENV === 'production'
-    ? MONGO_DB
-    : mongo, {
+  await mongoose.connect(NODE_ENV === 'production' ? MONGO_DB : mongo, {
     useNewUrlParser: true,
     useUnifiedTopology: false,
-  });
+  })
+    .then(() => console.log('mongo connected'))
+    .catch((err) => console.log(err));
 
   app.use(errorLogger);
   app.use(errors());
