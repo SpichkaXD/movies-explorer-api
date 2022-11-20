@@ -1,8 +1,8 @@
-class ValidateError extends Error {
+class BadRequestError extends Error {
   constructor(message) {
     super(message);
     this.statusCode = 400;
   }
 }
 
-module.exports = ValidateError;
+module.exports = BadRequestError;

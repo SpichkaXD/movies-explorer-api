@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
-const regex = /https?:\/\/(www\.)?[\w\W]+#?$/;
+// const regex = /https?:\/\/(www\.)?[\w\W]+#?$/;
 
-const moviesSchema = new mongoose.Schema({
+const movieSchema = new mongoose.Schema({
   country: {
     type: String,
     required: true,
@@ -27,9 +28,7 @@ const moviesSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator(value) {
-        return regex.test(value);
-      },
+      validator: (v) => validator.isURL(v),
       message: 'Введите корректный URL-адрес',
     },
   },
@@ -37,9 +36,7 @@ const moviesSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator(value) {
-        return regex.test(value);
-      },
+      validator: (v) => validator.isURL(v),
       message: 'Введите корректный URL-адрес',
     },
   },
@@ -47,9 +44,7 @@ const moviesSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator(value) {
-        return regex.test(value);
-      },
+      validator: (v) => validator.isURL(v),
       message: 'Введите корректный URL-адрес',
     },
   },
@@ -72,4 +67,4 @@ const moviesSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('movie', moviesSchema);
+module.exports = mongoose.model('movie', movieSchema);

@@ -1,51 +1,39 @@
 require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const helmet = require('helmet');
 const { errors } = require('celebrate');
-const limiter = require('./utils/rateLimiter');
-const mongo = require('./utils/mongo');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
-const cors = require('./middlewares/cors');
-const serverError = require('./errors/serverError');
-
-const { PORT = 3000, NODE_ENV, MONGO_DB } = process.env;
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const helmet = require('helmet');
 
 const app = express();
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+const errorHandler = require('./middlewares/errorHandler');
+const routes = require('./routes/index');
+const limiter = require('./utils/rateLimiter');
 
-app.use(requestLogger);
-app.use(limiter);
-app.use(helmet());
+const { PORT = 3300, DATABASE = 'mongodb://localhost:27017/moviesdb' } = process.env;
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(cors);
 
-app.use('/', require('./routes/routes'));
+app.use(helmet());
+app.use(requestLogger);
+app.use(limiter);
+app.use(cors());
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
+app.use(routes);
 
-async function main() {
-  await mongoose.connect(NODE_ENV === 'production' ? MONGO_DB : mongo, {
-    useNewUrlParser: true,
-    useUnifiedTopology: false,
-  })
-    .then(() => console.log('mongo connected'))
-    .catch((err) => console.log(err));
+app.use(errorLogger);
 
-  app.use(errorLogger);
-  app.use(errors());
+app.use(errors());
 
-  app.use(serverError);
+app.use(errorHandler);
 
-  await app.listen(PORT);
-  console.log(`App listening on port ${PORT}`);
-}
+mongoose.connect(DATABASE);
 
-main();
+app.listen(PORT);
+
+// eslint-disable-next-line no-console
+console.log(`App listening on port ${PORT}`);
